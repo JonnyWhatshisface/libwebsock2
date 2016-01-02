@@ -1,0 +1,50 @@
+.\" Manpage for libwebsock.
+.\" Contact jhall@futuresouth.us to correct errors or typos
+.TH libwebsock 1 "29 November 2015" "2.0" "libwebsock User Manual"
+.SH NAME
+libwebsock
+.SH ABOUT
+libwebsock is a light-weight websocket library written based to meet the RFC6455 specification. It currently passes all tests in the Autobahn test. It is designed to be extremely simple to use, very efficient and easily integrated.
+.PP
+libwebsock is geared towards usage in threaded applications, or can be used is a single threaded program. Initialization of the context spawns the schedulers and agents, as well as dynamically allocates job wrappers, thread wrappers and client context wrappers on to a virtual stack within the VM. Stack size is defineable, as is the count of worker threads for each agent, within the core.h header. Please note that these cannot, at present, be overridden with #define statements in your program. The ability to change this via the API will be available on release 2.0.5, after 2.0.0 has had the time to be tested and benchmarked to find optimized defaults for common systems, at which time, specification of NULL for the values will choose a profile best for your processor specifications.
+.PP
+libwebsock has a built in listen server that allows you to specify the port and interface IP to bind to. To bind on all interfaces, simply use "0.0.0.0" for the argument.
+.PP
+Also supported is the loading of multiple contexts, as well as multiple listenservers.
+.SH USAGE
+Usage of libwebsock is made to be extremely simple. Simply include <websock.h> in to your project and either start a listenserver, or create a listenserver struct to pass to the libwebsock_start() function and use your own already existing socket connection.
+.PP
+#include <websock.h>
+.PP
+int main() {
+.PP
+    libwebsock_listenserver_context *lwsctx = libwebsock_listenserver("0.0.0.0","8080");
+    libwebsock_context *ctx = libwebsock_init();
+    ctx->onconnect = client_connect;
+    ctx->onmessage = client_message;
+    ctx->onclost = client_close;
+    libwebsock_start(ctx,lwsctx, NULL, 1024);
+    libwebsock_shutdown(ctx);
+.PP
+}
+.PP
+Once libwebsock_start() is called, the loop begins and connections will be accepted. To cancel and exit, simply send an interrupt signal.
+.SH "SEE ALSO"
+libwebsock_api(1), libwebsock_listenserver(2), libwebsock_init_context(2), libwebsock_start(2), libwebsock_shutdown(2)
+.SH BUGS
+No known bugs at this time. I'm sure someone will report a few...
+.SH AUTHOR
+Jonathan D. Hall <jhall@futuresouth.us>
+.SH COPYRIGHT
+libwebsock is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+.PP
+libwebsock is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+.PP
+You should have received a copy of the GNU General Public License
+along with libwebsock.  If not, see <http://www.gnu.org/licenses/>.

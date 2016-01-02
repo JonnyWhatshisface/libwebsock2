@@ -1,0 +1,75 @@
+.\" Manpage for libwebsock.
+.\" Contact jhall@futuresouth.us to correct errors or typos
+.TH libwebsock 2 "29 November 2015" "2.0" "libwebsock User Manual"
+.SH NAME
+libwebsock_init_context();
+.SH ABOUT
+libwebsock_context *libwebsock_init_context(void);
+.PP
+libwebsock_init_context(); is used to initialize the libwebsock context. It returns the type libwebsock_context *, which is a pointerto the context. This data structure holds several key settings to this instance of libwebsock, which can be configured and changed by the user.
+.SH USAGE
+Usage of the libwebsock_init_context(); function is quite simple. You define a libwebsock_context * type and assign the result to it. From there, you'll have access to modify the settings you choose prior to starting up the websocket protocol on it. To understand the options that can be configured on the context, we need to first understaind the libwebsock_context struct.
+.PP
+typedef struct _libwebsock_context {
+unsigned short running;
+unsigned short ssl_init;
+unsigned int client_count;
+unsigned int connection_workers;
+unsigned int dispatch_workers;
+unsigned int controlframe_workers;
+unsigned int evbase_count;
+struct event_base *base;
+void *scheduler;
+libwebsock_client_state *clients;
+libwebsock_listenserver_context *lsctx;
+int (*onmessage)(libwebsock_client_state *, libwebsock_message *);
+int (*oncontrolframe)(libwebsock_client_state *, libwebsock_frame *);
+int (*onopen)(libwebsock_client_state *);
+int (*onclose)(libwebsock_client_state *);
+int (*onpong)(libwebsock_client_state *);
+int (*onping)(libwebsock_client_state *);
+} libwebsock_context;
+.PP
+Important to note is that the worker count for each agent, and the evbase count, are set to the defaults in libwebsock_init_context(); and can be changed prior to calling libwebsock_start();
+.PP
+unsigned short running and unsigned short ssl_init should not be modified. This is used internally to determine the status and state of the libwebsock_context.
+The unsigned int client_count is another optional use integer for the user to track connection count should he choose. This would best be suited in the onconnect function.
+.PP
+unsigned int
+
+.PP
+#include <websock.h>
+.PP
+int main() {
+.PP
+libwebsock_listenserver_context *lwsctx = libwebsock_listenserver("0.0.0.0","8080");
+libwebsock_context *ctx = libwebsock_init();
+ctx->onconnect = client_connect;
+ctx->onmessage = client_message;
+ctx->onclost = client_close;
+ctx->evbase_count = 4;
+libwebsock_start(ctx,lwsctx, NULL, 1024);
+libwebsock_shutdown(ctx);
+.PP
+}
+.PP
+Once libwebsock_start() is called, the loop begins and connections will be accepted. To cancel and exit, simply send an interrupt signal.
+.SH "SEE ALSO"
+libwebsock_api(1), libwebsock_listenserver(2), libwebsock_init_context(2), libwebsock_start(2), libwebsock_shutdown(2)
+.SH BUGS
+No known bugs at this time. I'm sure someone will report a few...
+.SH AUTHOR
+Jonathan D. Hall <jhall@futuresouth.us>
+.SH COPYRIGHT
+libwebsock is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+.PP
+libwebsock is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+.PP
+You should have received a copy of the GNU General Public License
+along with libwebsock.  If not, see <http://www.gnu.org/licenses/>.

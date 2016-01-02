@@ -1,0 +1,44 @@
+Originators and Contributors 1.7.1 to 2.0.0
+---------------------------------------
+
+Jonathan D. Hall        <jhall@futuresouth.us>
+
+libwebsock has been entirely re-written in v2.0.0, introducing
+new concepts and methodologies along with many new improvements.
+
+
+Originators and Contributors up to 1.7.1
+---------------------------------------
+
+Payden Kyle Sutherland  <N/A> [Originator]
+
+Azat Khuzin             <a3at.mail@gmail.com>
+Thomas Petazzoni        <thomas@free-electrons.com>
+Joakim Söderberg        <N/A>
+Michael Weber           <mweber@gmail.com>
+Clark Moody             <clark@moody.com>
+
+Special thanks goes to Payden Kyle Sutherland for original
+conception and design.
+
+Payden Kyle Sutherland started this project with the goal
+of creating an easy to work with websocket library that would
+handle all of the RFC6455 protocol specifications for the user.
+His work paved the way for what is now libwebsock v2.0 . Payden
+unfortunately passed away at a very early age, only 27 years old.
+
+Jonathan Hall, who was using libwebsock for testing of a new idea,
+picked up his work and continued it. It is with libwebsock that
+Payden Kyle Sutherland will be forever eternally amongst us, and
+his brilliant conception will continue to serve those now and in
+to the future.
+
+Though the entire core was re-written and enhanced, Payden's
+work set the bar and paved the way for the direction the
+project ultimately ended up going. With that being said,
+this library exists because of him, and full credit is given
+to him and to his family.
+
+Though licensed under the GPL free software license, it is
+requested that if you use this product to make a profit,
+you kindly donate to his family.

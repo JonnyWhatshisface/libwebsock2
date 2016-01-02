@@ -1,0 +1,108 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		0552CE7D1C0B52F3003FB7EA /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
+		0552CE7E1C0B52F3003FB7EA /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = "<group>"; };
+		0552CE7F1C0B52F3003FB7EA /* man */ = {isa = PBXFileReference; lastKnownFileType = folder; path = man; sourceTree = "<group>"; };
+		0552CE801C0B52F3003FB7EA /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+		0552CE851C0B55EE003FB7EA /* AUTHORS */ = {isa = PBXFileReference; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
+		0552CE861C0B55F7003FB7EA /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		0552CE871C0B5601003FB7EA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0552CE881C0B560D003FB7EA /* INSTALL */ = {isa = PBXFileReference; lastKnownFileType = text; path = INSTALL; sourceTree = "<group>"; };
+		0552CE891C0B561B003FB7EA /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		0552CE8A1C0B5624003FB7EA /* ChangeLog */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChangeLog; sourceTree = "<group>"; };
+		0552CE8B1C0B5645003FB7EA /* NEWS */ = {isa = PBXFileReference; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
+		0552CE8E1C0B5844003FB7EA /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		0552CE901C0B59FA003FB7EA /* autogen.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = autogen.sh; sourceTree = "<group>"; };
+		0552CE911C0B5E4A003FB7EA /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
+		0552CE941C0B614C003FB7EA /* m4 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = m4; sourceTree = "<group>"; };
+		0552CE951C0B9A8C003FB7EA /* THANKS */ = {isa = PBXFileReference; lastKnownFileType = text; path = THANKS; sourceTree = "<group>"; };
+		056FB0221C0F1FC8004319FB /* COPYING */ = {isa = PBXFileReference; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		059A04921C31750F00DE7539 /* TODO */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0552CE731C0B4F8D003FB7EA = {
+			isa = PBXGroup;
+			children = (
+				059A04921C31750F00DE7539 /* TODO */,
+				056FB0221C0F1FC8004319FB /* COPYING */,
+				0552CE951C0B9A8C003FB7EA /* THANKS */,
+				0552CE901C0B59FA003FB7EA /* autogen.sh */,
+				0552CE911C0B5E4A003FB7EA /* configure.ac */,
+				0552CE8E1C0B5844003FB7EA /* Makefile.am */,
+				0552CE851C0B55EE003FB7EA /* AUTHORS */,
+				0552CE861C0B55F7003FB7EA /* README */,
+				0552CE871C0B5601003FB7EA /* README.md */,
+				0552CE881C0B560D003FB7EA /* INSTALL */,
+				0552CE891C0B561B003FB7EA /* LICENSE */,
+				0552CE8A1C0B5624003FB7EA /* ChangeLog */,
+				0552CE8B1C0B5645003FB7EA /* NEWS */,
+				0552CE941C0B614C003FB7EA /* m4 */,
+				0552CE7D1C0B52F3003FB7EA /* doc */,
+				0552CE7E1C0B52F3003FB7EA /* examples */,
+				0552CE7F1C0B52F3003FB7EA /* man */,
+				0552CE801C0B52F3003FB7EA /* src */,
+			);
+			sourceTree = "<group>";
+			usesTabs = 0;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		0552CE741C0B4F8D003FB7EA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = "Future South Technologies";
+			};
+			buildConfigurationList = 0552CE771C0B4F8D003FB7EA /* Build configuration list for PBXProject "libwebsock2" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 0552CE731C0B4F8D003FB7EA;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		0552CE781C0B4F8D003FB7EA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		0552CE791C0B4F8D003FB7EA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0552CE771C0B4F8D003FB7EA /* Build configuration list for PBXProject "libwebsock2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0552CE781C0B4F8D003FB7EA /* Debug */,
+				0552CE791C0B4F8D003FB7EA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0552CE741C0B4F8D003FB7EA /* Project object */;
+}

@@ -1,0 +1,6 @@
+* Create a "lws_scheduler_get_wrapper" function to return pointer to wrapper.
+   - Need to pre-allocate X amount of wrappers and reuse them to cut down malloc() calls
+   - Need to increase allocated wrapper count as needed, and clear them as they're no longer
+     in demand
+
+* Implement VM for pre-allocated wrappers to increase performance and maximize memory performance.
