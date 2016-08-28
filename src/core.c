@@ -148,7 +148,7 @@ void *lws_worker_agent_function(void *ptr) {
     lws_worker *worker = (lws_worker *)ptr;
     lws_job *job;
     
-#ifdef LIBWEBSOCK_DEBUG
+//#ifdef LIBWEBSOCK_DEBUG
     switch(worker->worker_type) {
         case LWS_DISPATCH_WORKER :
             printf("[%s]: Dispatch worker [%d] started...\n", __func__, worker->worker_number);
@@ -160,13 +160,16 @@ void *lws_worker_agent_function(void *ptr) {
             printf("[%s]: Connection worker [%d] started...\n", __func__, worker->worker_number);
             break;
         case LWS_EVBASE_WORKER :
+            //worker->base = event_base_new();
             printf("[%s]: Event base worker [%d] started...\n", __func__, worker->worker_number);
-            break;
+            while (1) {
+                event_base_dispatch(worker->base);
+            }
         default : // Debugging / Just in case
             printf("[WARNING] : An unknown worker type has been started...\n");
             break;
     }
-#endif
+//#endif
     
     while (1) {
         pthread_mutex_lock(&worker->scheduler->lws_jobs_mutex);
@@ -198,8 +201,8 @@ void *lws_worker_agent_function(void *ptr) {
         printf("[%s]: Worker type [%d] number [%d] is executing job...\n", __func__, worker->worker_type, worker->worker_number);
 #endif
 
-        if (job->type == LWS_EVBASE)
-            job->base = worker->base;
+        //if (job->type == LWS_EVBASE)
+        job->base = worker->base;
         job->job_func(job);
         if (job->status == finished) {
             lws_free(job);
@@ -287,9 +290,9 @@ int lws_scheduler_init(libwebsock_context *ctx) {
             return 1;
         }
         LL_ADD(connection_worker, connection_worker->scheduler->workers);
-    }
+    //}
     // dispatch scheduler
-    for (i = 0; i < dispatch_workers; i++) {
+    //for (i = 0; i < dispatch_workers; i++) {
         if ((dispatch_worker = lws_calloc(sizeof(lws_worker))) == NULL) {
             perror("Failed to allocate dispatch worker threads.");
             return 1;
@@ -305,9 +308,9 @@ int lws_scheduler_init(libwebsock_context *ctx) {
             return 1;
         }
         LL_ADD(dispatch_worker, dispatch_worker->scheduler->workers);
-    }
+    //}
     // control frame scheduler
-    for (i = 0; i < controlframe_workers; i++) {
+    //for (i = 0; i < controlframe_workers; i++) {
         if ((controlframe_worker = lws_calloc(sizeof(lws_worker))) == NULL) {
             perror("Failed to allocate control frame worker threads.");
             return 1;
@@ -323,9 +326,9 @@ int lws_scheduler_init(libwebsock_context *ctx) {
             return 1;
         }
         LL_ADD(controlframe_worker, controlframe_worker->scheduler->workers);
-    }
+    //}
     // event base threads
-    for (i = 0; i < client_event_bases; i++) {
+    //for (i = 0; i < client_event_bases; i++) {
         if ((evbase_thread = lws_calloc(sizeof(lws_worker))) == NULL) {
             perror("Failed to allocate event base threads.");
             return 1;
@@ -339,34 +342,22 @@ int lws_scheduler_init(libwebsock_context *ctx) {
         evbase_thread->scheduler = scheduler->evbase_scheduler;
         evbase_thread->worker_number = i;
         workertype = LWS_EVBASE_WORKER;
-        evbase_thread->worker_type = workertype;
         evbase_thread->base = event_base_new();
+        evbase_thread->worker_type = workertype;
         if (pthread_create(&evbase_thread->thread, NULL, lws_worker_agent_function, (void *)evbase_thread)) {
             perror("Failed to start all event base threads.");
             lws_free(evbase_thread);
             return 1;
         }
         
-        evbase_loop_thread->base = evbase_thread->base;
-        evbase_loop_thread->worker_number = i;
-        if (pthread_create(&evbase_loop_thread->thread, NULL, lws_evbase_thread_loop_function, (void *)evbase_loop_thread)) {
-            perror("Unable to start client event loop threads...\n");
-            lws_free(evbase_loop_thread);
-            return 1;
-        }
-        // Add signals to event base threads...
-        sig_event = evsignal_new(evbase_thread->base, SIGINT, lws_evthread_handle_signal, (void *) evbase_thread);
-        event_add(sig_event, NULL);
-        sig_event = evsignal_new(evbase_thread->base, SIGUSR2, lws_evthread_handle_signal, (void *) evbase_thread);
-        event_add(sig_event, NULL);
         
+        connection_worker->base = evbase_thread->base;
+        dispatch_worker->base = evbase_thread->base;
+        controlframe_worker->base = evbase_thread->base;
+
         LL_ADD(evbase_thread, evbase_thread->scheduler->workers);
+        
     }
-    // Add signal event for main event loop
-    sig_event = evsignal_new(ctx->base, SIGINT, lws_handle_signal, (void *) ctx);
-    event_add(sig_event, NULL);
-    sig_event = evsignal_new(ctx->base, SIGUSR2, lws_handle_signal, (void *) ctx);
-    event_add(sig_event, NULL);
     
     ctx->scheduler = scheduler;
     

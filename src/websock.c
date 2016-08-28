@@ -152,18 +152,13 @@ void lws_handle_connection_request(lws_sockfd fd, short ev, void *arg) {
     memcpy(job_wrapper->ipaddr, &ipaddr, sizeof(ipaddr));
     job_wrapper->ctx = arg;
     job_wrapper->sockfd = client_state_fd;
-    job_wrapper->job_func = lws_add_client_to_evbase;
+//    job_wrapper->job_func = lws_add_client_to_evbase;
+    job_wrapper->job_func = lws_handle_accept;
     job_wrapper->status = inprogress;
-    job_wrapper->type = LWS_EVBASE;
+    //job_wrapper->type = LWS_EVBASE;
+    job_wrapper->type = LWS_CONNECTION;
     lws_scheduler_add_job(job_wrapper);
 }
-
-void lws_add_client_to_evbase(lws_job *job) {
-    job->job_func = lws_handle_accept;
-    job->type = LWS_CONNECTION;
-    lws_scheduler_add_job(job);
-}
-
 
 void lws_handle_accept(lws_job *job) {
     libwebsock_client_state *client_state = (libwebsock_client_state *) lws_calloc(sizeof(libwebsock_client_state));
@@ -175,11 +170,14 @@ void lws_handle_accept(lws_job *job) {
 #endif
     
     evutil_make_socket_nonblocking(job->sockfd);
-    bev = bufferevent_socket_new(job->base, job->sockfd, BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE);
+    client_state->buf_ev = bufferevent_socket_new(job->base, job->sockfd, BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE);
     memcpy(client_state->ipaddr, &job->ipaddr, sizeof(job->ipaddr));
     
-    client_state->buf_ev = bev;
+    //client_state->buf_ev = bev;
     client_state->base = job->base;
+    //if((client_state->base = event_base_new()) == NULL) {
+    //    perror("Unable create client event base...\n");
+    //}
     client_state->ctx = job->ctx;
     client_state->sockfd = (int)job->sockfd;
     client_state->flags |= STATE_CONNECTING;
@@ -191,9 +189,9 @@ void lws_handle_accept(lws_job *job) {
      * want to know about it -> libwebsock_client_close();
      */
     
-    bufferevent_setcb(bev, libwebsock_handle_handshake, NULL, libwebsock_client_close, (void *) client_state);
-    bufferevent_set_timeouts(bev, &tv,&tv);
-    bufferevent_enable(bev, EV_READ | EV_WRITE);
+    bufferevent_setcb(client_state->buf_ev, libwebsock_handle_handshake, NULL, libwebsock_client_close, (void *) client_state);
+    bufferevent_set_timeouts(client_state->buf_ev, &tv,&tv);
+    bufferevent_enable(client_state->buf_ev, EV_READ|EV_WRITE);
     
     job->ctx->client_count++; // Perhaps only count this when the handshake is done??
 #ifdef LIBWEBSOCK_DEBUG
@@ -202,7 +200,7 @@ void lws_handle_accept(lws_job *job) {
     
     job->status = finished; // Mark the job as finished and it will get free'd
 #ifdef LIBWEBSOCK_DEBUG
-    printf("[%s]: Event base at [%p] added to job!\n", __func__, job->base);
+    printf("[%s]: Connection established on event base [%p]\n", __func__, job->base);
 #endif
 
 }
@@ -316,7 +314,6 @@ void libwebsock_schedule_recv(struct bufferevent *bev, void *ptr) {
 
 void libwebsock_handle_handshake(struct bufferevent *bev, void *ptr) {
     libwebsock_client_state *state = ptr;
-    
     if(!state) {
         printf("State does not exist...\n");
         return;
@@ -730,7 +727,7 @@ void libwebsock_fail_connection(libwebsock_client_state *state, unsigned short c
 
 void libwebsock_free_all_frames(libwebsock_client_state *state) {
     libwebsock_frame *current, *next;
-    pthread_mutex_lock(&state->frame_lock);
+//    pthread_mutex_lock(&state->frame_lock);
     if (state != NULL) {
         current = state->current_frame;
         if (current) {
@@ -751,7 +748,7 @@ void libwebsock_free_all_frames(libwebsock_client_state *state) {
             }
         }
     }
-    pthread_mutex_lock(&state->frame_lock);
+//    pthread_mutex_unlock(&state->frame_lock);
 }
 
 void lws_parse_headers(void) {

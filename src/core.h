@@ -228,7 +228,6 @@ void *lws_evbase_thread_loop_function(void *ptr);
 void lws_handle_connection_request(lws_sockfd fd, short ev, void *arg);
 void lws_handle_accept(lws_job *);
 void lws_handle_close(lws_job *);
-void lws_add_client_to_evbase(lws_job *job);
 void lws_parse_headers(void);
 
 void libwebsock_handle_handshake(struct bufferevent *bev, void *ptr);

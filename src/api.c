@@ -79,7 +79,7 @@ libwebsock_listenserver_context *libwebsock_listenserver(char *listen_host, char
                 continue;
             } else {
 #ifdef LIBWEBSOCK_DEBUG
-                fprintf(stderr,"Bound to socket fd [%i]\n",sockfd);
+                fprintf(stderr,"[%s] Bound to socket fd [%i]\n",__func__,sockfd);
 #endif
             }
             break;
@@ -137,7 +137,8 @@ libwebsock_context *libwebsock_init_context(void) {
 }
 
 void libwebsock_start(libwebsock_context *ctx, libwebsock_listenserver_context *lsctx, unsigned int max_payload) {
-    struct event *listener_event;
+    struct event *listener_event, *sig_event;
+    
     lws_scheduler_init(ctx); // Initialize the scheduler for this context
     
     listener_event = event_new(ctx->base, lsctx->sockfd, EV_READ | EV_PERSIST, lws_handle_connection_request, (void *) ctx);
@@ -147,7 +148,12 @@ void libwebsock_start(libwebsock_context *ctx, libwebsock_listenserver_context *
     printf("Running on libevent version: %s\n", event_get_version());
 #endif
     ctx->running = 1;
-    event_base_loop(ctx->base, 0);
+    // Add signal event for main event loop
+    sig_event = evsignal_new(ctx->base, SIGINT, lws_handle_signal, (void *) ctx);
+    event_add(sig_event, NULL);
+    sig_event = evsignal_new(ctx->base, SIGUSR2, lws_handle_signal, (void *) ctx);
+    event_add(sig_event, NULL);
+    event_base_dispatch(ctx->base);
 }
 
 void libwebsock_shutdown(libwebsock_context *ctx) {
